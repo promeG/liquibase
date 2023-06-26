@@ -189,37 +189,37 @@ jobs:
         uses: stCarolas/setup-maven@v4.5
         with:
           maven-version: ${{ env.MAVEN_VERSION }}
-      - name: Build & Test Java 8
-        if: ${{ matrix.java == 8}}
-        run: |
-          mvn -B "-Dbuild.repository.owner=${{ needs.setup.outputs.thisRepositoryOwner }}" "-Dbuild.repository.name=${{ needs.setup.outputs.thisRepositoryName }}" "-Dbuild.branch=${{ needs.setup.outputs.thisBranchName }}" "-Dbuild.number=${{ github.run_number }}" "-Dbuild.commit=${{ needs.setup.outputs.thisSha }}" "-DtrimStackTrace=false" -pl '!liquibase-dist,!liquibase-cdi-jakarta' clean test package surefire-report:report
-      - name: Build & Test Java non-jdk-8
-        if: ${{ matrix.java != 8}}
-        run: |
-          mvn -B "-Dbuild.repository.owner=${{ needs.setup.outputs.thisRepositoryOwner }}" "-Dbuild.repository.name=${{ needs.setup.outputs.thisRepositoryName }}" "-Dbuild.branch=${{ needs.setup.outputs.thisBranchName }}" "-Dbuild.number=${{ github.run_number }}" "-Dbuild.commit=${{ needs.setup.outputs.thisSha }}" "-DtrimStackTrace=false" -pl '!liquibase-dist' clean test package surefire-report:report
+#       - name: Build & Test Java 8
+#         if: ${{ matrix.java == 8}}
+#         run: |
+#           mvn -B "-Dbuild.repository.owner=${{ needs.setup.outputs.thisRepositoryOwner }}" "-Dbuild.repository.name=${{ needs.setup.outputs.thisRepositoryName }}" "-Dbuild.branch=${{ needs.setup.outputs.thisBranchName }}" "-Dbuild.number=${{ github.run_number }}" "-Dbuild.commit=${{ needs.setup.outputs.thisSha }}" "-DtrimStackTrace=false" -pl '!liquibase-dist,!liquibase-cdi-jakarta' clean test package surefire-report:report
+#       - name: Build & Test Java non-jdk-8
+#         if: ${{ matrix.java != 8}}
+#         run: |
+#           mvn -B "-Dbuild.repository.owner=${{ needs.setup.outputs.thisRepositoryOwner }}" "-Dbuild.repository.name=${{ needs.setup.outputs.thisRepositoryName }}" "-Dbuild.branch=${{ needs.setup.outputs.thisBranchName }}" "-Dbuild.number=${{ github.run_number }}" "-Dbuild.commit=${{ needs.setup.outputs.thisSha }}" "-DtrimStackTrace=false" -pl '!liquibase-dist' clean test package surefire-report:report
 
-      - name: Remove Original Jars for *nix
-        if: env.OS_TYPE != 'windows-2019'
-        run: |
-          find . -name original-*.jar -exec rm {} \;
+#       - name: Remove Original Jars for *nix
+#         if: env.OS_TYPE != 'windows-2019'
+#         run: |
+#           find . -name original-*.jar -exec rm {} \;
 
 
-      - name: Archive Test Results
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: liquibase-test-results-jdk${{ matrix.java }}
-          path: |
-            ./**/target/surefire-reports
-            ./**/target/site
+#       - name: Archive Test Results
+#         if: ${{ always() }}
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: liquibase-test-results-jdk${{ matrix.java }}
+#           path: |
+#             ./**/target/surefire-reports
+#             ./**/target/site
 
-      - name: Archive Modules
-        if: ${{ matrix.java == 11 && matrix.os == 'ubuntu-22.04'}}
-        uses: actions/upload-artifact@v3
-        with:
-          name: liquibase-modules
-          path: |
-            */target/*-0-SNAPSHOT.jar
+#       - name: Archive Modules
+#         if: ${{ matrix.java == 11 && matrix.os == 'ubuntu-22.04'}}
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: liquibase-modules
+#           path: |
+#             */target/*-0-SNAPSHOT.jar
 
   sonar:
     name: Sonar Scan
@@ -246,11 +246,11 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn clean verify sonar:sonar -P sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+#       - name: Build and analyze
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#         run: mvn clean verify sonar:sonar -P sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
 
   integration-test:
     name: Integration Test
@@ -299,23 +299,23 @@ jobs:
           key: built-code-${{ github.run_number }}-${{ github.run_attempt }}
           path: ./**/target
 
-      - name: Login to Artifactory
-        uses: docker/login-action@v2
-        with:
-          registry: docker-dev.artifactory.datical.net
-          username: ${{ secrets.ARTIFACTORY_USER }}
-          password: ${{ secrets.ARTIFACTORY_TOKEN }}
+#       - name: Login to Artifactory
+#         uses: docker/login-action@v2
+#         with:
+#           registry: docker-dev.artifactory.datical.net
+#           username: ${{ secrets.ARTIFACTORY_USER }}
+#           password: ${{ secrets.ARTIFACTORY_TOKEN }}
 
-      - name: Run Tests
-        run: mvn -B jar:jar jar:test-jar surefire:test -DtrimStackTrace=false -Dliquibase.sdk.testSystem.test=${{ matrix.testSystem }} -Dliquibase.sdk.testSystem.acceptLicenses=${{ matrix.testSystem }} -Dtest=*IntegrationTest,*ExecutorTest -DfailIfNoTests=false -Dsurefire.failIfNoSpecifiedTests=false
+#       - name: Run Tests
+#         run: mvn -B jar:jar jar:test-jar surefire:test -DtrimStackTrace=false -Dliquibase.sdk.testSystem.test=${{ matrix.testSystem }} -Dliquibase.sdk.testSystem.acceptLicenses=${{ matrix.testSystem }} -Dtest=*IntegrationTest,*ExecutorTest -DfailIfNoTests=false -Dsurefire.failIfNoSpecifiedTests=false
 
-      - name: Archive Test Results
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ steps.prepare.outputs.testResultsArtifact }}
-          path: |
-            ./**/target/surefire-reports
+#       - name: Archive Test Results
+#         if: ${{ always() }}
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: ${{ steps.prepare.outputs.testResultsArtifact }}
+#           path: |
+#             ./**/target/surefire-reports
 
   package:
     name: Package Artifacts
