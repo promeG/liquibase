@@ -355,16 +355,16 @@ jobs:
         with:
           maven-version: ${{ env.MAVEN_VERSION }}
 
-      - name: Download liquibase-commercial
-        uses: liquibase/action-download-artifact@v2-liquibase
-        with:
-          github_token: ${{ secrets.BOT_TOKEN }}
-          workflow: build.yml
-          workflow_conclusion: success
-          branch: "${{ needs.setup.outputs.proBranchName }}"
-          name: liquibase-commercial-modules
-          path: download/liquibase-commercial
-          repo: liquibase/liquibase-pro
+#       - name: Download liquibase-commercial
+#         uses: liquibase/action-download-artifact@v2-liquibase
+#         with:
+#           github_token: ${{ secrets.BOT_TOKEN }}
+#           workflow: build.yml
+#           workflow_conclusion: success
+#           branch: "${{ needs.setup.outputs.proBranchName }}"
+#           name: liquibase-commercial-modules
+#           path: download/liquibase-commercial
+#           repo: liquibase/liquibase-pro
 
       - name: Install Built Modules
         run: |
