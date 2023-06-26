@@ -394,7 +394,7 @@ jobs:
 
           ## extract tar content for other artifacts
           mkdir -p liquibase-dist/target/liquibase-0-SNAPSHOT
-          (cd liquibase-dist/target/liquibase-0-SNAPSHOT && tar xfz ../liquibase-0-SNAPSHOT.tar.gz)
+          #(cd liquibase-dist/target/liquibase-0-SNAPSHOT && tar xfz ../liquibase-0-SNAPSHOT.tar.gz)
 
           ##create zip file from tar content
           #(cd liquibase-dist/target/liquibase-0-SNAPSHOT && zip -r ../liquibase-0-SNAPSHOT.zip *)
